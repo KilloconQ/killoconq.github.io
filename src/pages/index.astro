@@ -1,10 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Experience from "../components/Experience.astro";
+import SectionContainer from "../components/SectionContainer.astro";
+import Projects from "../components/Projects.astro";
 ---
 
-<Layout title="Fernando's Portfolio">
+<Layout
+  title="Portafolio de Fernando - Desarrollador Full-Stack"
+  description="Contrata a Fernando para crear tu aplicación web. Especializado en hacer realidad los sueños de mis clientes"
+>
   <main>
-    <section class="w-full mx-auto py-44 lg:w-[740px]">
+    <SectionContainer class="w-full mx-auto py-44 lg:w-[740px]">
       <h1 class="text-white text-5xl font-bold flex justify-center flex-row">
         Hola, soy Fernando
       </h1>
@@ -12,7 +18,21 @@ import Layout from "../layouts/Layout.astro";
         3 años de experiencia. Desarrollador Full-Stack. Especializado en hacer
         realidad los sueños de mis clientes
       </h2>
-    </section>
+    </SectionContainer>
+
+    <SectionContainer>
+      <h2 class="text-2xl font-semibold mb-6 flex gap-x-3 items-center">
+        Experiencia
+      </h2>
+      <Experience />
+    </SectionContainer>
+
+    <SectionContainer>
+      <h2 class="text-2xl font-semibold mb-6 flex gap-x-3 items-center">
+        Proyectos
+      </h2>
+      <Projects />
+    </SectionContainer>
   </main>
 </Layout>
 

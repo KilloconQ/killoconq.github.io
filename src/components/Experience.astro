@@ -1,0 +1,29 @@
+---
+import ExperienceItem from "./ExperienceItem.astro";
+const EXPERIENCIE = [
+  {
+    date: "2024 - Actualidad",
+    title: "Software Developer",
+    company: "CARFAXMX",
+    description:
+      "Desarrollador de aplicaciones web y microservicios para la empresa y sus clientes. Mantenimiento y actualización a nuevas versiones de frameworks.",
+  },
+  {
+    date: "2022 - 2024",
+    title: "Software Developer",
+    company: "Netlogistik",
+    description:
+      "Responsable de la creación de nuevos componentes, utilidades y testing para plataforma de manejo de personal tanto Frontend y API. Mejora de un 30% en la entrega de software.",
+  },
+];
+---
+
+<ol class="relative mt-16">
+  {
+    EXPERIENCIE.map((experiencie) => (
+      <li class="">
+        <ExperienceItem {...experiencie} />
+      </li>
+    ))
+  }
+</ol>
