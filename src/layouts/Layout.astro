@@ -29,14 +29,34 @@ const { title, description } = Astro.props;
   }
 
   html {
-    background: #000;
     font-family: "Jetbrains Mono Variable", monospace;
+    scroll-behavior: smooth;
   }
 
   body {
-    background-color: #050505;
+    /* background-color: linear-gradient(180deg, #000000, #cccccc); */
+    /* background-color: #050505; */
+    background-image: linear-gradient(
+      180deg,
+      hsl(0deg 0% 7%) 69%,
+      hsl(252deg 14% 7%) 87%,
+      hsl(253deg 25% 7%) 92%,
+      hsl(254deg 37% 7%) 94%,
+      hsl(254deg 48% 8%) 95%,
+      hsl(254deg 59% 8%) 96%,
+      hsl(253deg 70% 8%) 97%,
+      hsl(252deg 80% 8%) 98%,
+      hsl(250deg 90% 8%) 99%,
+      hsl(249deg 100% 8%) 100%
+    );
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    min-height: 100vh;
+  }
+
+  @media (prefers-reduce-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 </style>
