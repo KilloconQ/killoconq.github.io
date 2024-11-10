@@ -6,5 +6,5 @@ import tailwind from "@astrojs/tailwind";
 export default defineConfig({
   integrations: [tailwind()],
   site: "https://killoconq.github.io",
-  base: "https://github.com/killoconq/killoconq.github.io",
+  base: "killoconq",
 });
