@@ -23,7 +23,6 @@ export const PROJECTS: Project[] = [
       Permite generar cotizaciones personalizadas, integrar catálogos de productos, y agilizar el flujo de ventas entre clientes y administración.
       Incluye lógica compleja para la selección de materiales y cálculos de precios en tiempo real. Construido con React y Firebase para asegurar rapidez, escalabilidad y flexibilidad.
     `.trim(),
-    img: rdsImage, // Imagen de ejemplo para pasar el test
     tags: ['React', 'Firebase', 'Material UI', 'JavaScript'],
     date: '2024-05-15',
   },
@@ -34,7 +33,6 @@ export const PROJECTS: Project[] = [
       Desarrollado como solución SaaS escalable, incorpora autenticación JWT, control de acceso por roles, dashboards, y manejo avanzado de materiales y órdenes de compra.
       Utiliza Angular para el frontend y Node.js/NestJS con Postgres y Prisma para un backend robusto y seguro. Integración con procesos de automatización y reporting personalizado para fábricas y PYMES.
     `.trim(),
-    img: rdsImage, // Imagen de ejemplo para pasar el test
     tags: ['Angular', 'Node.js', 'NestJS', 'Postgres', 'Prisma'],
     date: '2025-07-01',
   },
