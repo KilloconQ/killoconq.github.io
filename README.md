@@ -28,15 +28,51 @@ Este proyecto es un portafolio personal desarrollado con [Astro](https://astro.b
 
 ## 🧞 Comandos Útiles
 
-| Comando                  | Acción                                   |
-| ------------------------ | ---------------------------------------- |
-| `npm install`            | Instala dependencias                     |
-| `npm run dev`            | Inicia el servidor de desarrollo         |
-| `npm run build`          | Genera el sitio para producción          |
-| `npm run preview`        | Previsualiza el sitio generado           |
-| `npx prettier --write .` | Formatea el código según las reglas      |
-| `npx eslint .`           | Linting del código (si está configurado) |
-| `npx astro check`        | Verifica la configuración de Astro       |
+| Comando                   | Acción                                   |
+| ------------------------- | ---------------------------------------- |
+| `bun install`             | Instala dependencias                     |
+| `bun run dev`             | Inicia el servidor de desarrollo         |
+| `bun run build`           | Genera el sitio para producción          |
+| `bun run preview`         | Previsualiza el sitio generado           |
+| `bunx prettier --write .` | Formatea el código según las reglas      |
+| `bunx eslint .`           | Linting del código (si está configurado) |
+| `bunx astro check`        | Verifica la configuración de Astro       |
+
+## 🧪 Pruebas (Testing)
+
+Este proyecto soporta pruebas unitarias, de integración y end-to-end (E2E).
+
+### 1. Tests unitarios (datos/lógica)
+
+Ejecuta todos los tests unitarios con:
+
+```bash
+bunx vitest run
+```
+
+### 2. Tests de componentes Astro
+
+Por compatibilidad, ejecuta estos tests con Node.js (no con Bun):
+
+```bash
+npx vitest run src/components/Header.test.ts
+```
+
+> Nota: Actualmente, los tests de componentes Astro con la Container API no funcionan en Bun por un bug de compatibilidad con esbuild. Usa Node.js para estos tests.
+
+### 3. Tests end-to-end (E2E)
+
+Ejecuta los tests E2E con Playwright:
+
+```bash
+bunx playwright test
+```
+
+- Los tests de datos y lógica funcionan perfectamente con Bun.
+- Los tests E2E funcionan perfectamente con Bun.
+- Los tests de componentes Astro requieren Node.js por ahora.
+
+Para más información, consulta la documentación oficial de [Astro Testing](https://docs.astro.build/en/guides/testing/).
 
 ## 📚 Aprende más
 
