@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { useTranslations } from '../../i18n/ui';
+
+// Notes are Spanish-only for now; they come straight out of the Obsidian vault.
+const locale = 'es' as const;
+const t = useTranslations(locale);
+
+const notes = (await getCollection('notes'))
+  .filter((note) => note.data.published)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const dateFormat = new Intl.DateTimeFormat('es-MX', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<Layout locale={locale} title={t('section.notes')}>
+  <Nav locale={locale} />
+
+  <main class="px-6 pt-16 pb-24 md:px-16 md:pt-24 md:pb-32">
+    <h1
+      class="text-[clamp(2.2rem,6vw,4.25rem)] leading-none font-extrabold tracking-[-0.035em] uppercase"
+    >
+      {t('section.notes')}
+    </h1>
+
+    <ul class="mt-12 flex flex-col md:mt-16">
+      {
+        notes.map((note) => (
+          <li>
+            <a
+              href={`/notes/${note.id}`}
+              class="group hover:bg-panel border-hairline -mx-5 flex flex-col gap-2 border-b px-5 py-7 transition-colors md:grid md:grid-cols-[160px_minmax(0,1fr)_auto] md:items-baseline md:gap-8"
+            >
+              <time
+                datetime={note.data.pubDate.toISOString()}
+                class="font-mono text-ink-low text-xs tracking-[0.1em] uppercase"
+              >
+                {dateFormat.format(note.data.pubDate)}
+              </time>
+              <h2 class="text-ink text-2xl font-semibold tracking-[-0.015em] md:text-[28px]">
+                {note.data.title}
+              </h2>
+              <span class="font-mono text-ink-low text-[11px] tracking-[0.08em] uppercase">
+                {note.data.tags.join(' \u00b7 ')}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>

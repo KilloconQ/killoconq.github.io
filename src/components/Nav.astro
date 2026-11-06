@@ -1,0 +1,65 @@
+---
+import { type Locale, localePath, useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const path = Astro.url.pathname;
+const esPath = path.replace(/^\/en(?=\/|$)/, '') || '/';
+const enPath = path.startsWith('/en') ? path : `/en${path === '/' ? '' : path}`;
+
+const links = [
+  { href: `${localePath(locale)}#trabajo`, label: t('nav.work') },
+  { href: '/notes', label: t('nav.notes') },
+  { href: `${localePath(locale)}#contacto`, label: t('nav.contact') },
+];
+---
+
+<header
+  class="border-hairline flex flex-wrap items-center justify-between gap-4 border-b px-6 py-5 md:px-16"
+>
+  <a
+    href={localePath(locale)}
+    class="font-mono text-ink hover:text-signal flex items-center gap-3.5 text-xs font-bold tracking-[0.12em] uppercase"
+  >
+    <span class="beat size-[7px] rounded-full bg-live"></span>
+    <span>Fernando Corrales</span>
+  </a>
+
+  <div class="flex items-center gap-6 md:gap-10">
+    <nav class="font-mono flex gap-5 text-xs tracking-[0.1em] uppercase md:gap-8">
+      {
+        links.map((link) => (
+          <a href={link.href} class="text-ink-mid hover:text-ink">
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="font-mono border-edge flex items-center border text-[11px] tracking-[0.1em] uppercase">
+      <a
+        href={esPath}
+        class:list={[
+          'px-3 py-1.5',
+          locale === 'es' ? 'bg-signal text-bg font-bold' : 'text-ink-low hover:text-ink',
+        ]}
+        hreflang="es"
+        aria-current={locale === 'es' ? 'true' : undefined}>ES</a
+      >
+      <a
+        href={enPath}
+        class:list={[
+          'px-3 py-1.5',
+          locale === 'en' ? 'bg-signal text-bg font-bold' : 'text-ink-low hover:text-ink',
+        ]}
+        hreflang="en"
+        aria-current={locale === 'en' ? 'true' : undefined}>EN</a
+      >
+    </div>
+  </div>
+</header>

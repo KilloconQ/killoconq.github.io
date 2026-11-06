@@ -1,0 +1,171 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Nav from './Nav.astro';
+import Footer from './Footer.astro';
+import StatusDot from './StatusDot.astro';
+import { type Locale, useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  project: CollectionEntry<'projects'>;
+}
+
+const { locale, project } = Astro.props;
+const t = useTranslations(locale);
+const d = project.data;
+
+const meta = [
+  { label: t('case.period'), value: d.period },
+  { label: t('case.role'), value: d.role },
+  { label: t('case.users'), value: d.users },
+];
+
+const station = 'px-6 pt-16 md:grid md:grid-cols-[128px_minmax(0,1fr)_300px] md:gap-12 md:px-16 md:pt-18';
+const stationNumber = 'font-mono text-signal text-xs font-bold tracking-[0.14em]';
+const stationTitle = 'text-[clamp(1.6rem,4vw,2.125rem)] font-bold tracking-[-0.02em]';
+const stationBody = 'text-[19px] leading-[1.7]';
+---
+
+<Layout locale={locale} title={d.title} description={d.summary}>
+  <Nav locale={locale} />
+
+  <main>
+    <header class="px-6 pt-16 md:px-16 md:pt-24">
+      <div class="md:grid md:grid-cols-[minmax(0,1fr)_380px] md:items-end md:gap-18">
+        <div>
+          <p class="font-mono text-ink-low mb-7 text-xs tracking-[0.16em] uppercase">
+            {d.context ?? d.code}
+          </p>
+          <h1
+            class="text-[clamp(2.2rem,6vw,4.25rem)] leading-none font-bold tracking-[-0.032em] uppercase"
+          >
+            {d.title}
+          </h1>
+        </div>
+
+        <dl class="border-hairline bg-surface mt-8 border md:mt-0">
+          <div class="border-hairline flex items-center justify-between border-b px-5 py-4">
+            <dt class="font-mono text-ink-low text-[11px] tracking-[0.1em] uppercase">
+              {t('case.status')}
+            </dt>
+            <dd><StatusDot status={d.status} locale={locale} compact /></dd>
+          </div>
+          {
+            meta.map((row, index) => (
+              <div
+                class:list={[
+                  'flex items-center justify-between gap-4 px-5 py-4',
+                  index < meta.length - 1 && 'border-hairline border-b',
+                ]}
+              >
+                <dt class="font-mono text-ink-low text-[11px] tracking-[0.1em] uppercase">
+                  {row.label}
+                </dt>
+                <dd class="font-mono text-ink-mid text-right text-[11px] tracking-[0.1em] uppercase">
+                  {row.value}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <div class="border-edge mt-16 border-t md:mt-22"></div>
+
+    <!-- 01 — The problem -->
+    <section class={station}>
+      <span class={stationNumber}>01</span>
+      <div class="flex flex-col gap-5">
+        <h2 class={stationTitle}>{t('case.problem')}</h2>
+        {
+          d.problem.map((paragraph, index) => (
+            <p class:list={[stationBody, index === 0 ? 'text-ink/90' : 'text-ink-mid']}>
+              {paragraph}
+            </p>
+          ))
+        }
+      </div>
+      {
+        d.context && (
+          <aside class="border-hairline font-mono text-ink-low mt-6 border-l pl-5 text-[11px] leading-[1.9] tracking-[0.06em] uppercase md:mt-0">
+            {t('case.context')}
+            <span class="text-ink-mid block normal-case">{d.context}</span>
+          </aside>
+        )
+      }
+    </section>
+
+    <!-- 02 — What I built -->
+    <section class={station}>
+      <span class={stationNumber}>02</span>
+      <div class="flex flex-col gap-5">
+        <h2 class={stationTitle}>{t('case.built')}</h2>
+        {d.built.map((paragraph) => <p class={`${stationBody} text-ink/90`}>{paragraph}</p>)}
+      </div>
+    </section>
+
+    <!-- 03 — Technical decisions -->
+    <section class={station}>
+      <span class={stationNumber}>03</span>
+      <div class="flex flex-col gap-6">
+        <h2 class={stationTitle}>{t('case.decisions')}</h2>
+        <div class="flex flex-col">
+          {
+            d.decisions.map((decision, index) => (
+              <div
+                class:list={[
+                  'border-hairline flex flex-col gap-2 border-t py-5 md:grid md:grid-cols-[260px_minmax(0,1fr)] md:gap-8',
+                  index === d.decisions.length - 1 && 'border-hairline border-b',
+                ]}
+              >
+                <h3 class="font-mono text-signal text-[13px] tracking-[0.06em]">
+                  {decision.title}
+                </h3>
+                <p class="text-ink-mid text-[17px] leading-relaxed">{decision.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — Where it broke. The section no other portfolio has. -->
+    <section class={station}>
+      <span class={`${stationNumber} text-alert`}>04</span>
+      <div class="border-alert flex flex-col gap-5 border-l-2 pl-6 md:pl-8">
+        <h2 class={stationTitle}>{t('case.broke')}</h2>
+        {d.broke.map((paragraph) => <p class={`${stationBody} text-ink/90`}>{paragraph}</p>)}
+      </div>
+    </section>
+
+    <!-- 05 — What I learned -->
+    <section class={station}>
+      <span class={stationNumber}>05</span>
+      <div class="flex flex-col gap-5">
+        <h2 class={stationTitle}>{t('case.learned')}</h2>
+        {d.learned.map((paragraph) => <p class={`${stationBody} text-ink/90`}>{paragraph}</p>)}
+      </div>
+    </section>
+
+    <!-- Stack, last: a consequence of the work, never the headline. -->
+    <section class={`${station} pb-20 md:pb-32`}>
+      <span class="font-mono text-ink-low text-xs font-bold tracking-[0.14em]">&mdash;&mdash;</span>
+      <div class="flex flex-col gap-5">
+        <h2 class="font-mono text-ink-mid text-xs font-bold tracking-[0.16em] uppercase">
+          {t('case.stack')}
+        </h2>
+        <ul class="font-mono flex flex-wrap gap-2.5 text-xs tracking-[0.06em]">
+          {
+            d.stack.map((item) => (
+              <li class="border-edge text-ink-mid border px-3.5 py-2">{item}</li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>

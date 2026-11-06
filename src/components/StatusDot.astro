@@ -1,0 +1,30 @@
+---
+import { type Locale, useTranslations } from '../i18n/ui';
+
+interface Props {
+  status: 'live' | 'building';
+  locale: Locale;
+  compact?: boolean;
+}
+
+const { status, locale, compact = false } = Astro.props;
+const t = useTranslations(locale);
+const live = status === 'live';
+---
+
+<div
+  class:list={[
+    'font-mono flex items-center gap-2.5 uppercase tracking-[0.1em]',
+    compact ? 'text-[10px]' : 'text-xs',
+    live ? 'text-live' : 'text-signal',
+  ]}
+>
+  {
+    live ? (
+      <span class="beat size-[7px] rounded-full bg-live" />
+    ) : (
+      <span class="size-[7px] rounded-full border-2 border-signal" />
+    )
+  }
+  <span>{live ? t('status.live') : t('status.building')}</span>
+</div>

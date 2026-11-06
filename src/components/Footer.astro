@@ -1,0 +1,17 @@
+---
+import { type Locale, useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<footer
+  class="border-hairline font-mono text-ink-low flex flex-wrap items-center justify-between gap-3 border-t px-6 py-6 text-[11px] tracking-[0.1em] uppercase md:px-16"
+>
+  <span>{t('footer.location')}</span>
+  <span>{t('footer.built')}</span>
+</footer>

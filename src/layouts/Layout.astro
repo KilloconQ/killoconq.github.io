@@ -1,85 +1,42 @@
 ---
 import '../styles/global.css';
+import { type Locale, useTranslations } from '../i18n/ui';
 
 interface Props {
-  title: string;
+  locale: Locale;
+  title?: string;
   description?: string;
 }
 
-const { title, description = "Developer. Músico. Curioso." } = Astro.props;
+const { locale, title, description } = Astro.props;
+const t = useTranslations(locale);
+
+const pageTitle = title ? `${title} — Fernando Corrales` : t('site.title');
+const pageDescription = description ?? t('site.description');
+
+// The same page in the other language, for hreflang and the ES/EN switch.
+const path = Astro.url.pathname;
+const esPath = path.replace(/^\/en(?=\/|$)/, '') || '/';
+const enPath = path.startsWith('/en') ? path : `/en${path === '/' ? '' : path}`;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={pageDescription} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" hreflang="es" href={new URL(esPath, Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(enPath, Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(esPath, Astro.site)} />
     <meta name="generator" content={Astro.generator} />
-    
-    <!-- Fonts: Syne (display), Inter (body), Space Mono (code) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <title>{title}</title>
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <title>{pageTitle}</title>
   </head>
-  <body>
+  <body class="bg-bg text-ink">
     <slot />
   </body>
 </html>
-<style is:global>
-  :root {
-    /* Colors */
-    --color-bg: #FAFAF9;
-    --color-text: #1C1917;
-    --color-text-muted: #78716C;
-    --color-accent: #22C55E;
-    --color-accent-hover: #16A34A;
-    --color-border: #E7E5E4;
-  }
-
-  html {
-    font-family: 'Inter', sans-serif;
-    scroll-behavior: smooth;
-    background-color: var(--color-bg);
-    color: var(--color-text);
-  }
-
-  body {
-    min-height: 100vh;
-    margin: 0;
-    line-height: 1.6;
-  }
-
-  /* Display font for headings */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    line-height: 1.1;
-    margin: 0;
-  }
-
-  /* Code/tech font */
-  code, pre, .mono {
-    font-family: 'Space Mono', monospace;
-  }
-
-  /* Links */
-  a {
-    color: var(--color-text);
-    text-decoration: none;
-    position: relative;
-  }
-
-  a:hover {
-    color: var(--color-accent);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-  }
-</style>

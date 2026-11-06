@@ -1,5 +1,7 @@
 ---
 id: 1755637835-BKMC
+title: Por qué cambiar a Zen
+pubDate: 2025-08-19
 aliases:
   - Por qué cambiar a Zen
 tags:
@@ -10,7 +12,6 @@ lang: es
 published: true
 ---
 
-# Por qué cambiar a Zen
 
 Desde que empecé a usar una computadora, siempre tuve la curiosidad de probar diferentes navegadores.
 

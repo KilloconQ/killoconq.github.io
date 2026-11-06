@@ -1,0 +1,290 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Nav from './Nav.astro';
+import Footer from './Footer.astro';
+import StatusDot from './StatusDot.astro';
+import { type Locale, localePath, useTranslations } from '../i18n/ui';
+import { home } from '../i18n/home';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const copy = home[locale];
+
+const projects = (await getCollection('projects'))
+  .filter((entry) => entry.id.startsWith(`${locale}/`))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const slugOf = (id: string) => id.split('/').slice(1).join('/');
+
+const rail = 'md:grid md:grid-cols-[88px_minmax(0,1fr)]';
+const railCode = 'font-mono text-signal text-[11px] font-bold tracking-[0.14em]';
+const sectionLabel =
+  'font-mono text-xs font-bold tracking-[0.18em] uppercase';
+---
+
+<Layout locale={locale}>
+  <Nav locale={locale} />
+
+  <main>
+    <!-- 00 — Hero. The headline and the systems board are one thing. -->
+    <section class={`${rail} px-6 pt-20 md:px-16 md:pt-28`}>
+      <div class="hidden md:flex md:flex-col md:items-start md:gap-2.5 md:pt-2.5">
+        <span class={railCode}>00</span>
+        <span
+          class="w-px grow bg-linear-to-b from-signal to-hairline to-[120px]"
+        ></span>
+      </div>
+
+      <div>
+        <p
+          class="rise-1 font-mono text-ink-low mb-8 text-xs tracking-[0.16em] uppercase md:mb-9"
+        >
+          {t('hero.eyebrow')}
+        </p>
+
+        <h1
+          class="max-w-[1120px] text-[clamp(2.6rem,8vw,6rem)] leading-[0.95] font-extrabold tracking-[-0.038em] uppercase"
+        >
+          <span class="rise-2 block">{t('hero.line1')}</span>
+          <span class="rise-3 block">
+            {t('hero.line2a')}{' '}
+            <span class="halt text-alert">{t('hero.line2b')}</span>.
+          </span>
+        </h1>
+
+        <p class="rise-4 text-ink-mid mt-10 max-w-[690px] text-xl leading-relaxed">
+          {t('hero.body')}
+        </p>
+
+        <!-- The board polls itself. Nothing here is a made-up number. -->
+        <div
+          class="rise-4 border-hairline bg-panel relative mt-12 overflow-hidden border md:mt-14"
+        >
+          <span
+            class="scan pointer-events-none absolute left-0 h-px w-full bg-linear-to-r from-transparent via-signal to-transparent"
+            aria-hidden="true"></span>
+
+          <div
+            class="border-hairline bg-panel-head flex items-center justify-between border-b px-5 py-3.5 md:px-6"
+          >
+            <h2 class={`${sectionLabel} text-ink-mid`}>{t('board.title')}</h2>
+            <p
+              class="font-mono text-ink-low flex items-center gap-2.5 text-[11px] tracking-[0.14em] uppercase"
+            >
+              <span class="beat bg-signal size-1.5 rounded-full"></span>
+              <span>{t('board.polling')}</span>
+            </p>
+          </div>
+
+          {
+            projects.map((project, index) => (
+              <div
+                class:list={[
+                  'flex flex-col gap-3 px-5 py-5 md:grid md:grid-cols-[92px_minmax(0,1fr)_260px_170px] md:items-center md:gap-6 md:px-6 md:py-6',
+                  index < projects.length - 1 && 'border-hairline border-b',
+                ]}
+              >
+                <span class="font-mono text-ink-low text-xs tracking-[0.1em]">
+                  {project.data.code}
+                </span>
+                <p class="text-xl font-semibold md:text-[21px]">{project.data.title}</p>
+                <p class="font-mono text-ink-low text-xs">
+                  {project.data.stackSummary.join(' · ')}
+                </p>
+                <StatusDot status={project.data.status} locale={locale} />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 — How I work. Full-bleed band, type at triple scale: the rhythm breaks here. -->
+    <section class="border-hairline bg-surface mt-24 border-t border-b md:mt-36">
+      <div class={`${rail} px-6 py-16 md:px-16 md:py-20`}>
+        <span class={`${railCode} hidden md:block`}>01</span>
+        <div>
+          <h2 class={`${sectionLabel} text-ink-low mb-10 md:mb-14`}>{t('section.how')}</h2>
+          <div class="flex max-w-[1180px] flex-col gap-10 md:gap-11">
+            {
+              copy.principles.map((item) => (
+                <div class="md:grid md:grid-cols-[minmax(0,1fr)_360px] md:items-baseline md:gap-14">
+                  <p class="text-[clamp(1.6rem,4vw,2.875rem)] leading-[1.08] font-bold tracking-[-0.028em]">
+                    {item.headline}
+                  </p>
+                  <p class="text-ink-mid mt-3 text-[17px] leading-relaxed md:mt-0">{item.body}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 — Selected work -->
+    <section id="trabajo" class={`${rail} px-6 pt-20 md:px-16 md:pt-32`}>
+      <span class={`${railCode} hidden md:block`}>02</span>
+      <div>
+        <h2 class={`${sectionLabel} border-edge block border-b pb-6`}>
+          {t('section.work')}
+        </h2>
+
+        {
+          projects.map((project) => (
+            <a
+              href={localePath(locale, `work/${slugOf(project.id)}`)}
+              class="group hover:bg-panel border-hairline -mx-5 flex flex-col gap-3.5 border-b px-5 py-8 transition-colors md:grid md:grid-cols-[60px_minmax(0,1fr)_280px_48px] md:items-start md:gap-8 md:py-10"
+            >
+              <span class="font-mono text-signal text-xs font-bold md:pt-2.5">
+                {String(project.data.order).padStart(2, '0')}
+              </span>
+
+              <div class="flex flex-col gap-3.5">
+                <div class="flex flex-wrap items-center gap-4">
+                  <h3 class="text-ink text-[clamp(1.4rem,3vw,2.125rem)] leading-[1.12] font-bold tracking-[-0.022em]">
+                    {project.data.title}
+                  </h3>
+                  {project.data.statusNote && (
+                    <span class="font-mono text-signal border-signal-edge bg-signal-bg flex items-center gap-2.5 border px-3 py-1.5 text-[11px] tracking-[0.1em] uppercase">
+                      <span class="beat bg-signal size-1.5 rounded-full" />
+                      {project.data.statusNote}
+                    </span>
+                  )}
+                </div>
+                <p class="text-ink-mid max-w-[600px] text-[17px] leading-relaxed">
+                  {project.data.summary}
+                </p>
+              </div>
+
+              <div class="font-mono text-ink-low flex flex-col gap-2 text-[11px] tracking-[0.08em] uppercase md:pt-3">
+                {project.data.stackSummary.map((line) => (
+                  <span>{line}</span>
+                ))}
+              </div>
+
+              <span class="hidden md:flex md:items-center md:justify-end md:pt-3.5">
+                <svg
+                  width="28"
+                  height="14"
+                  viewBox="0 0 28 14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  class="text-signal transition-transform group-hover:translate-x-1.5"
+                  aria-hidden="true"
+                >
+                  <path d="M0 7h26M20 1l6 6-6 6" />
+                </svg>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 03 — Tools, grouped by what they are for. Never a logo wall. -->
+    <section class={`${rail} px-6 pt-20 md:px-16 md:pt-32`}>
+      <span class={`${railCode} hidden md:block`}>03</span>
+      <div>
+        <div class="border-edge flex items-baseline gap-5 border-b pb-6">
+          <h2 class={sectionLabel}>{t('section.tools')}</h2>
+          <span class="grow"></span>
+          <p class="font-mono text-ink-low hidden text-[11px] tracking-[0.1em] uppercase md:block">
+            {t('section.tools.note')}
+          </p>
+        </div>
+        <div class="grid gap-10 pt-11 md:grid-cols-3 md:gap-14">
+          {
+            copy.tools.map((group) => (
+              <div class="flex flex-col gap-4">
+                <h3 class="font-mono text-signal text-[11px] tracking-[0.14em] uppercase">
+                  {group.label}
+                </h3>
+                <ul class="font-mono text-ink-mid flex flex-col gap-2 text-[15px]">
+                  {group.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — Exploring. Offset on purpose: the grid should not be predictable. -->
+    <section
+      class="px-6 pt-20 md:grid md:grid-cols-[88px_300px_minmax(0,1fr)] md:px-16 md:pt-32"
+    >
+      <span class={`${railCode} hidden md:block`}>04</span>
+      <h2 class={`${sectionLabel} text-ink-low mb-8 md:mb-0`}>{t('section.exploring')}</h2>
+      <div class="flex flex-col gap-10">
+        {
+          copy.exploring.map((item) => (
+            <div class="border-edge flex flex-col gap-3.5 border-l pl-6 md:pl-8">
+              <h3 class="text-[clamp(1.3rem,2.6vw,1.875rem)] font-bold tracking-[-0.02em]">
+                {item.headline}
+              </h3>
+              <p class="text-ink-mid max-w-[640px] text-lg leading-relaxed">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 05 — Outside code -->
+    <section class={`${rail} px-6 pt-20 md:px-16 md:pt-32`}>
+      <span class={`${railCode} hidden md:block`}>05</span>
+      <div class="flex flex-wrap items-baseline gap-6 md:gap-12">
+        <h2 class={`${sectionLabel} text-ink-low`}>{t('section.outside')}</h2>
+        <div class="flex max-w-[640px] flex-col gap-3.5">
+          <p class="text-[clamp(1.3rem,2.6vw,1.875rem)] font-bold tracking-[-0.02em]">
+            {copy.outside.headline}{' '}
+            <a href={copy.outside.bandUrl} class="border-signal-edge border-b">
+              {copy.outside.band}
+            </a>
+          </p>
+          <p class="text-ink-mid text-lg leading-relaxed">{copy.outside.body}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 — Contact -->
+    <section id="contacto" class="border-hairline bg-surface mt-20 border-t md:mt-32">
+      <div class={`${rail} px-6 py-16 md:px-16 md:py-24`}>
+        <span class={`${railCode} hidden md:block md:pt-3.5`}>06</span>
+        <div>
+          <h2
+            class="max-w-[900px] text-[clamp(2rem,5.5vw,3.875rem)] leading-[1.03] font-extrabold tracking-[-0.035em]"
+          >
+            {t('contact.headline')}
+          </h2>
+          <div class="mt-10 flex flex-wrap gap-3.5 md:mt-12">
+            {
+              copy.contact.map((link) => (
+                <a
+                  href={link.href}
+                  class:list={[
+                    'font-mono flex h-12 items-center px-7 text-xs font-medium tracking-[0.1em] uppercase transition-colors',
+                    link.primary
+                      ? 'bg-signal text-bg hover:bg-ink'
+                      : 'border-edge text-ink-mid hover:border-signal hover:text-ink border',
+                  ]}
+                >
+                  {link.label}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>
